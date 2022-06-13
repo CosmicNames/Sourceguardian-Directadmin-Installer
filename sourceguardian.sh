@@ -4,25 +4,60 @@ clear
 
 version="$(curl https://raw.githubusercontent.com/CosmicNames/Sourceguardian-Directadmin-Installer/main/version.txt)";
 
+do_update_ini()
+{
+    INI_DIR="/usr/local/${1}/lib/php.conf.d";
+    [ -d "${INI_DIR}" ] || mkdir -p ${INI_DIR};
+    INI_FILE="${INI_DIR}/99-custom.ini";
+    [ -f "${INI_FILE}" ] || INI_FILE="/usr/local/${1}/lib/php.conf.d/90-custom.ini";
+    ROW="extension=${2}";
+
+    if [[ -f "${INI_FILE}" ]]; then
+		grep -m1 -q "^${ROW}" "${INI_FILE}" >/dev/null 2>&1 || echo "${ROW}" >> ${INI_FILE};
+		echo "Sourceguardian is installed for PHP ${3}"
+	else
+		# Create the file if the directory exists
+		if [[ -d "$INI_DIR" ]] then
+			touch ${INI_FILE}
+			grep -m1 -q "^${ROW}" "${INI_FILE}" >/dev/null 2>&1 || echo "${ROW}" >> ${INI_FILE};
+			echo "Sourceguardian is installed for PHP ${3}"
+		fi
+	fi
+}
+
+verify_php_version()
+{
+    if [ -n "${PVN}" ];
+    then
+    {
+        if [ -d "/usr/local/php${PVN}" ] && [ -f "/usr/local/php${PVN}/bin/php" ];
+        then
+        {
+            PHPVER="php${PVN}";
+            PECL="/usr/local/php${PVN}/bin/pecl";
+        }
+        else
+        {
+            echo "${BN}[ERROR] PHP version php${PVN} was not found!${BF}";
+            exit 2;
+        }
+        fi;
+        if [ ! -x "${PECL}" ]; then
+            echo "${BN}[ERROR] PECL for PHP version php${PVN} was not found!${BF}";
+            exit 2;
+        fi;
+    }
+    fi;
+}
+
 if [[ -d "/usr/local/sourceguardian/" ]]; then
-	if grep -R 'zend_extension = /usr/local/sourceguardian/ixed.5.6.lin' "/usr/local/php56/lib/php.conf.d/90-custom.ini" > /dev/null 2>&1; then
-		echo "Sourceguardian was already installed in PHP 5.6"
-	fi
-	if grep -R 'zend_extension = /usr/local/sourceguardian/ixed.7.2.lin' "/usr/local/php72/lib/php.conf.d/90-custom.ini" > /dev/null 2>&1; then
-		echo "Sourceguardian was already installed in PHP 7.2"
-	fi
-	if grep -R 'zend_extension = /usr/local/sourceguardian/ixed.7.3.lin' "/usr/local/php73/lib/php.conf.d/90-custom.ini" > /dev/null 2>&1; then
-		echo "Sourceguardian was already installed in PHP 7.3"
-	fi
-	if grep -R 'zend_extension = /usr/local/sourceguardian/ixed.7.4.lin' "/usr/local/php74/lib/php.conf.d/90-custom.ini" > /dev/null 2>&1; then
-		echo "Sourceguardian was already installed in PHP 7.4"
-	fi
-	if grep -R 'zend_extension = /usr/local/sourceguardian/ixed.8.0.lin' "/usr/local/php80/lib/php.conf.d/90-custom.ini" > /dev/null 2>&1; then
-		echo "Sourceguardian was already installed in PHP 8.0"
-	fi
-	if grep -R 'zend_extension = /usr/local/sourceguardian/ixed.8.1.lin' "/usr/local/php81/lib/php.conf.d/90-custom.ini" > /dev/null 2>&1; then
-		echo "Sourceguardian was already installed in PHP 8.1"
-	fi
+	do_update_ini 56 ixed.5.6.lin 5.6
+	do_update_ini 72 ixed.7.2.lin 7.2
+	do_update_ini 72 ixed.7.3.lin 7.3
+	do_update_ini 74 ixed.7.4.lin 7.4
+	do_update_ini 80 ixed.8.0.lin 8.0
+	do_update_ini 81 ixed.8.1.lin 8.1
+
 	if grep -q $version "/usr/local/sourceguardian/version"; then
 		echo -e "\nSourceguardian is updated.\n";
 	else
