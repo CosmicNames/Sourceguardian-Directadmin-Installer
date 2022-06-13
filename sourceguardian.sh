@@ -7,7 +7,6 @@ version="$(curl https://raw.githubusercontent.com/CosmicNames/Sourceguardian-Dir
 do_update_ini()
 {
     INI_DIR="/usr/local/${1}/lib/php.conf.d";
-    [ -d "${INI_DIR}" ] || mkdir -p ${INI_DIR};
     INI_FILE="${INI_DIR}/99-custom.ini";
     [ -f "${INI_FILE}" ] || INI_FILE="/usr/local/${1}/lib/php.conf.d/90-custom.ini";
     ROW="extension=${2}";
