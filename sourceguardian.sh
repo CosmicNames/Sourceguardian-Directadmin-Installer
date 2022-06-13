@@ -25,30 +25,6 @@ do_update_ini()
 	fi
 }
 
-verify_php_version()
-{
-    if [ -n "${PVN}" ];
-    then
-    {
-        if [ -d "/usr/local/php${PVN}" ] && [ -f "/usr/local/php${PVN}/bin/php" ];
-        then
-        {
-            PHPVER="php${PVN}";
-            PECL="/usr/local/php${PVN}/bin/pecl";
-        }
-        else
-        {
-            echo "${BN}[ERROR] PHP version php${PVN} was not found!${BF}";
-            exit 2;
-        }
-        fi;
-        if [ ! -x "${PECL}" ]; then
-            echo "${BN}[ERROR] PECL for PHP version php${PVN} was not found!${BF}";
-            exit 2;
-        fi;
-    }
-    fi;
-}
 
 if [[ -d "/usr/local/sourceguardian/" ]]; then
 	do_update_ini 56 ixed.5.6.lin 5.6
