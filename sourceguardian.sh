@@ -2,7 +2,7 @@
 # by Aria ;)
 clear
 
-version="$(curl https://app.gerdoo.cloud/sg.php)";
+version="$(curl https://raw.githubusercontent.com/CosmicNames/Sourceguardian-Directadmin-Installer/main/version.txt)";
 
 if [[ -d "/usr/local/sourceguardian/" ]]; then
 	if grep -R 'zend_extension = /usr/local/sourceguardian/ixed.5.6.lin' "/usr/local/php56/lib/php.conf.d/90-custom.ini" > /dev/null 2>&1; then
@@ -16,6 +16,12 @@ if [[ -d "/usr/local/sourceguardian/" ]]; then
 	fi
 	if grep -R 'zend_extension = /usr/local/sourceguardian/ixed.7.4.lin' "/usr/local/php74/lib/php.conf.d/90-custom.ini" > /dev/null 2>&1; then
 		echo "Sourceguardian was already installed in PHP 7.4"
+	fi
+	if grep -R 'zend_extension = /usr/local/sourceguardian/ixed.8.0.lin' "/usr/local/php80/lib/php.conf.d/90-custom.ini" > /dev/null 2>&1; then
+		echo "Sourceguardian was already installed in PHP 8.0"
+	fi
+	if grep -R 'zend_extension = /usr/local/sourceguardian/ixed.8.1.lin' "/usr/local/php81/lib/php.conf.d/90-custom.ini" > /dev/null 2>&1; then
+		echo "Sourceguardian was already installed in PHP 8.1"
 	fi
 	if grep -q $version "/usr/local/sourceguardian/version"; then
 		echo -e "\nSourceguardian is updated.\n";
@@ -81,6 +87,14 @@ else
 	if [[ -f "/usr/local/php74/lib/php.conf.d/90-custom.ini" ]]; then
 		echo "zend_extension = /usr/local/sourceguardian/ixed.7.4.lin" >> /usr/local/php74/lib/php.conf.d/90-custom.ini
 		echo "Sourceguardian is installed in PHP 7.4"
+	fi
+	if [[ -f "/usr/local/php80/lib/php.conf.d/90-custom.ini" ]]; then
+		echo "zend_extension = /usr/local/sourceguardian/ixed.8.0.lin" >> /usr/local/php80/lib/php.conf.d/90-custom.ini
+		echo "Sourceguardian is installed in PHP 8.0"
+	fi
+	if [[ -f "/usr/local/php81/lib/php.conf.d/90-custom.ini" ]]; then
+		echo "zend_extension = /usr/local/sourceguardian/ixed.8.1.lin" >> /usr/local/php81/lib/php.conf.d/90-custom.ini
+		echo "Sourceguardian is installed in PHP 8.1"
 	fi
 
 	echo -e "\nSourceguardian were installed.\n";
